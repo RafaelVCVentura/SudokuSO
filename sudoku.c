@@ -7,6 +7,10 @@
 #define NUM_THREADS 11
 #define TAM_SUDOKU 9
 
+int sudoku[TAM_SUDOKU][TAM_SUDOKU];
+
+
+
 
 
 int ler_sudoku(const char *nome_arquivo, int matriz[TAM_SUDOKU][TAM_SUDOKU]) {
@@ -34,11 +38,29 @@ int ler_sudoku(const char *nome_arquivo, int matriz[TAM_SUDOKU][TAM_SUDOKU]) {
     fclose(fp);
     return 1;  // Sucesso
 }
+void *verificarLinha(void *arg) {
+    int linha = *(int *)arg;
+    int numeros[10] = {0};
+
+    for (int j = 0; j < TAM_SUDOKU; j++) {
+        int num = sudoku[linha][j];
+        if (num < 1 || num > 9) {
+            printf("Linha %d possui número inválido: %d\n", linha + 1, num);
+            pthread_exit((void *)0);
+        }
+        if (numeros[num]) {
+            printf("Linha %d possui número repetido: %d\n", linha + 1, num);
+            pthread_exit((void *)0);
+        }
+        numeros[num] = 1;
+    }
+
+    pthread_exit((void *)1);
+}
 
 
 
 int main(int argc, char *argv[]) {
-    int sudoku[TAM_SUDOKU][TAM_SUDOKU];
 
     if (argc < 2) {
         printf("Uso: %s <nome_do_arquivo>\n", argv[0]);
@@ -56,6 +78,8 @@ int main(int argc, char *argv[]) {
         }
         printf("\n");
     }
+
+
 
     return 0;
 }
