@@ -18,5 +18,5 @@ void* verifica_linhas(void* parametros);
 void* verifica_colunas(void* parametros);
 void* verifica_3x3(void* parametros);
 int verificar_segmento_valido(int segmento[TAM_SUDOKU]);
-
+void verifica_1thread();
 #endif 
