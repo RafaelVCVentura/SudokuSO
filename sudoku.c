@@ -80,9 +80,9 @@ int subgrid_valido(int linha,int col){
     }
     return 1;
 }
-w
+
 //aqui tem que passar o index da thread tambem
-a
+
 void *checa_subgrid(void*param){
     parametros *data = (parametros *) param;
     int linha = data->linha;

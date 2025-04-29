@@ -14,7 +14,6 @@ int ler_sudoku(const char *nome_arquivo, int matriz[TAM_SUDOKU][TAM_SUDOKU]) {
     /*Para esta função é passado o nome do arquivo do jogo sudoku + extensão, que são obtidos pelo argumento na segunda posição argv
      e também uma matriz alocada TAM_SUDOKUxTAM_SUDOKU
     */
-   aasdsakdnaskljn
     FILE *fp = fopen(nome_arquivo, "r");
     if (!fp) {
         perror("Erro ao abrir o arquivo");
