@@ -26,4 +26,4 @@ jobs:
         run: chmod +x ./programa  # Adiciona permissão de execução ao programa
 
       - name: Run the program
-        run: ./programa # Agora deve funcionar sem erro de permissão
+        run: ./programa teste.txt # Agora deve funcionar sem erro de permissão
