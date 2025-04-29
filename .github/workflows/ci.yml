@@ -1,0 +1,23 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - main  # Ou 'master', dependendo do seu repositório
+  pull_request:
+    branches:
+      - main  # Ou 'master', dependendo do seu repositório
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Escolhendo a versão mais recente do Ubuntu
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
+      - name: Set up GCC
+        run: sudo apt-get install gcc
+
+      - name: Build with Makefile
+        run: make
