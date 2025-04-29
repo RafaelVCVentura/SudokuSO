@@ -38,8 +38,19 @@ int ler_sudoku(const char *nome_arquivo, int matriz[TAM_SUDOKU][TAM_SUDOKU]) {
 }
 
 void cria_threads () {
+    //Pega o início do tempo em segundos do processo ou do sistema, cria a thread calculando as linhas e mostra na tela o tempo decorrido necessário
+    struct timespec inicio, fim;
+    clock_gettime(CLOCK_MONOTONIC, &inicio);
     pthread_create(&threads[0], NULL, verifica_linhas, NULL);
-    pthread_create(&threads[1],NULL,verifica_colunas,NULL);
+    clock_gettime(CLOCK_MONOTONIC, &fim);
+    printf("\nO tempo necessário para executar essa thread de linhas foi de %.10f segundos\n", tempo_decorrido(inicio, fim));
+
+    //Faz o mesmo que fez com as linhas, agora com as colunas
+    clock_gettime(CLOCK_MONOTONIC, &inicio);
+    pthread_create(&threads[1], NULL, verifica_colunas, NULL);
+    clock_gettime(CLOCK_MONOTONIC, &fim);
+    printf("O tempo necessário para executar essa thread de colunas foi de %.10f segundos\n\n", tempo_decorrido(inicio, fim));
+
     int index = 2;
     for(int i =0; i < 3;i++){
         for(int j = 0;j<3;j++){
@@ -64,6 +75,8 @@ void aguarda_threads() {
 
 
 int main(int argc, char *argv[]) {
+    struct timespec inicio_total, fim_total;
+    clock_gettime(CLOCK_MONOTONIC, &inicio_total);
 
     if (argc < 2) {
         printf("Uso: %s <nome_do_arquivo>\n", argv[0]);
@@ -88,6 +101,7 @@ int main(int argc, char *argv[]) {
         printf("%d resultado [%d]\n", resultados[i],i);
     }
     
-
+    clock_gettime(CLOCK_MONOTONIC, &fim_total);
+    printf("O tempo de execução total foi de: %.6f segundos\n", tempo_decorrido(inicio_total, fim_total));
     return 0;
 }

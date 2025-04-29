@@ -20,5 +20,5 @@ void* verifica_linhas(void* parametros);
 void* verifica_colunas(void* parametros);
 void* verifica_3x3(void* parametros);
 int verificar_segmento_valido(int segmento[TAM_SUDOKU]);
-
+double tempo_decorrido(struct timespec inicio, struct timespec fim);
 #endif 

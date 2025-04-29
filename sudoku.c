@@ -84,6 +84,10 @@ int subgrid_valido(int linha,int col){
 //aqui tem que passar o index da thread tambem
 
 void *verifica_3x3(void*param){
+    //Pega o tempo do sistema em segundos para calcular ao final
+    struct timespec inicio, fim;
+    clock_gettime(CLOCK_MONOTONIC, &inicio);
+
     parametros *data = (parametros *) param;
     int linha = data->linha;
     int coluna = data ->coluna;
@@ -92,6 +96,16 @@ void *verifica_3x3(void*param){
     int valido = subgrid_valido(linha,coluna);
     // Imprime o resultado
     resultados[thread_id] = valido;
+    
+    //Mostra na tela quanto tempo foi necessário para rodar a subgrid 3x3
+    clock_gettime(CLOCK_MONOTONIC, &fim);
+    printf("O tempo necessário para verificar a thread do subgrid que começa em %d %d foi de: %.10f segundos\n",
+           linha, coluna, tempo_decorrido(inicio, fim));
+
     free(param);
     pthread_exit(NULL);
+}
+
+double tempo_decorrido(struct timespec inicio, struct timespec fim) {
+    return (fim.tv_sec - inicio.tv_sec) + (fim.tv_nsec - inicio.tv_nsec) / 1e9;
 }
