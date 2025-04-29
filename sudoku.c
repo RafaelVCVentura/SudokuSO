@@ -22,17 +22,17 @@ int verificar_segmento_valido(int segmento[TAM_SUDOKU]) {
 // Recebe NULL como parâmetros devido a thread que verifica as linhas não precisar receber o struct parâmetros
 void *verifica_linhas(void *param) {
     for (int i = 0; i < TAM_SUDOKU; i++) {
-        int linha[TAM_SUDOKU];
+        int linha[TAM_SUDOKU]; //Cria um array com o tamanho do Sudoku
         for (int j = 0; j < TAM_SUDOKU; j++) {
-            linha[j] = sudoku[i][j];
+            linha[j] = sudoku[i][j]; //Armazena as linhas no array 
         }
         if (verificar_segmento_valido(linha) == 0) {
             printf("Erro na linha %d\n", i);
-            resultados[0] = 0;
+            resultados[0] = 0; //Retorna 0 como erro e sai da thread
             pthread_exit(NULL);
         }
     }
-    resultados[0] = 1;
+    resultados[0] = 1; //Retorna 1 como sucesso e sai da thread
     pthread_exit(NULL);
 }
 
