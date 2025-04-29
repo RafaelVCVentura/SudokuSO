@@ -2,11 +2,13 @@
 #define SUDOKU_H
 #include <stdlib.h>
 #include <pthread.h>
+#include <stdatomic.h>
 #define NUM_THREADS 11
 #define TAM_SUDOKU 9
 
 extern int resultados[11];
 extern pthread_t threads[11];
+extern atomic_int thread_index;
 extern int sudoku[TAM_SUDOKU][TAM_SUDOKU];
 
 typedef struct {

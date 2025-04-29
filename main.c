@@ -9,6 +9,7 @@
 int resultados[11] = {0};
 pthread_t threads[11];
 int sudoku[TAM_SUDOKU][TAM_SUDOKU];
+atomic_int thread_index = 2;
 
 int ler_sudoku(const char *nome_arquivo, int matriz[TAM_SUDOKU][TAM_SUDOKU]) {
     /*Para esta função é passado o nome do arquivo do jogo sudoku + extensão, que são obtidos pelo argumento na segunda posição argv
@@ -39,6 +40,20 @@ int ler_sudoku(const char *nome_arquivo, int matriz[TAM_SUDOKU][TAM_SUDOKU]) {
 void cria_threads () {
     pthread_create(&threads[0], NULL, verifica_linhas, NULL);
     pthread_create(&threads[1],NULL,verifica_colunas,NULL);
+    int index = 2;
+    for(int i =0; i < 3;i++){
+        for(int j = 0;j<3;j++){
+            parametros *data = malloc(sizeof(parametros));
+            data->linha = i *3;
+            data->coluna = j*3;
+
+            if(pthread_create(&threads[index],NULL,verifica_3x3,data)!=0){
+                perror("Erro ao criar thread de subgrid");
+                exit(EXIT_FAILURE);
+            }
+            index++;
+        }
+    }
 }
 
 void aguarda_threads() {
@@ -69,8 +84,10 @@ int main(int argc, char *argv[]) {
 
     cria_threads();
     aguarda_threads();
-    printf("%d resultado\n", resultados[0]);
-    printf("%d resultado\n", resultados[1]);
+    for(int i = 0; i <NUM_THREADS;i++){
+        printf("%d resultado [%d]\n", resultados[i],i);
+    }
+    
 
     return 0;
 }

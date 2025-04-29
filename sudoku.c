@@ -64,13 +64,12 @@ void *verifica_colunas(void *param) {
 
 
 int subgrid_valido(int linha,int col){
-    int visao[TAM_SUDOKU] ={0} // Array para marcar os numeros vistos
-
+    int visao[TAM_SUDOKU] ={0}; // Array para marcar os numeros vistos
     //Iterar sobre o grid 3x3
     for(int i =0; i<3;i++){
         for(int j = 0;j<3;j++){
-            int num = sudoku[linha+1][col+1]
-
+            
+            int num = sudoku[linha + i][col + j];
             if(num < 1 || num > 9 || visao[num-1]){
                 return 0;
             }
@@ -78,21 +77,21 @@ int subgrid_valido(int linha,int col){
             visao[num-1] = 1;
         }
     }
+   
     return 1;
 }
 
 //aqui tem que passar o index da thread tambem
 
-void *checa_subgrid(void*param){
+void *verifica_3x3(void*param){
     parametros *data = (parametros *) param;
     int linha = data->linha;
     int coluna = data ->coluna;
-
+    int thread_id = atomic_fetch_add(&thread_index,1);
     //Verifica o subgrid
     int valido = subgrid_valido(linha,coluna);
-     // Imprime o resultado
-     printf("Thread %d: Subgrid começando em (%d, %d) %s\n", data->thread_id, row, col, valid ? "Válida" : "Inválida");
-    
-     free(param);
-     pthread_exit(NULL);
+    // Imprime o resultado
+    resultados[thread_id] = valido;
+    free(param);
+    pthread_exit(NULL);
 }
