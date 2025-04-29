@@ -9,6 +9,7 @@
 int resultados[11] = {0};
 pthread_t threads[11];
 int sudoku[TAM_SUDOKU][TAM_SUDOKU];
+atomic_int thread_index = 2;
 
 int ler_sudoku(const char *nome_arquivo, int matriz[TAM_SUDOKU][TAM_SUDOKU]) {
     /*Para esta função é passado o nome do arquivo do jogo sudoku + extensão, que são obtidos pelo argumento na segunda posição argv
@@ -37,8 +38,33 @@ int ler_sudoku(const char *nome_arquivo, int matriz[TAM_SUDOKU][TAM_SUDOKU]) {
 }
 
 void cria_threads () {
+    //Pega o início do tempo em segundos do processo ou do sistema, cria a thread calculando as linhas e mostra na tela o tempo decorrido necessário
+    struct timespec inicio, fim;
+    clock_gettime(CLOCK_MONOTONIC, &inicio);
     pthread_create(&threads[0], NULL, verifica_linhas, NULL);
-    pthread_create(&threads[1],NULL,verifica_colunas,NULL);
+    clock_gettime(CLOCK_MONOTONIC, &fim);
+    printf("\nO tempo necessário para executar essa thread de linhas foi de %.10f segundos\n", tempo_decorrido(inicio, fim));
+
+    //Faz o mesmo que fez com as linhas, agora com as colunas
+    clock_gettime(CLOCK_MONOTONIC, &inicio);
+    pthread_create(&threads[1], NULL, verifica_colunas, NULL);
+    clock_gettime(CLOCK_MONOTONIC, &fim);
+    printf("O tempo necessário para executar essa thread de colunas foi de %.10f segundos\n\n", tempo_decorrido(inicio, fim));
+
+    int index = 2;
+    for(int i =0; i < 3;i++){
+        for(int j = 0;j<3;j++){
+            parametros *data = malloc(sizeof(parametros));
+            data->linha = i *3;
+            data->coluna = j*3;
+
+            if(pthread_create(&threads[index],NULL,verifica_3x3,data)!=0){
+                perror("Erro ao criar thread de subgrid");
+                exit(EXIT_FAILURE);
+            }
+            index++;
+        }
+    }
 }
 
 void aguarda_threads() {
@@ -49,6 +75,8 @@ void aguarda_threads() {
 
 
 int main(int argc, char *argv[]) {
+    struct timespec inicio_total, fim_total;
+    clock_gettime(CLOCK_MONOTONIC, &inicio_total);
 
     if (argc < 2) {
         printf("Uso: %s <nome_do_arquivo>\n", argv[0]);
@@ -69,8 +97,11 @@ int main(int argc, char *argv[]) {
 
     cria_threads();
     aguarda_threads();
-    printf("%d resultado\n", resultados[0]);
-    printf("%d resultado\n", resultados[1]);
-
+    for(int i = 0; i <NUM_THREADS;i++){
+        printf("%d resultado [%d]\n", resultados[i],i);
+    }
+    
+    clock_gettime(CLOCK_MONOTONIC, &fim_total);
+    printf("O tempo de execução total foi de: %.6f segundos\n", tempo_decorrido(inicio_total, fim_total));
     return 0;
 }

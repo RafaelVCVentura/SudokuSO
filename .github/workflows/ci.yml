@@ -1,0 +1,29 @@
+name: C Compilation and Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Set up C compiler
+        run: sudo apt-get install build-essential
+
+      - name: Compile the program
+        run: make
+
+      - name: Give execute permission to the program
+        run: chmod +x ./programa  # Adiciona permissão de execução ao programa
+
+      - name: Run the program
+        run: ./programa teste.txt # Agora deve funcionar sem erro de permissão

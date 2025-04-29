@@ -68,9 +68,59 @@ void *verifica_colunas(void *param) {
     pthread_exit(NULL);
 }
 
+<<<<<<< HEAD
 //Faz a validação com uma única thread
 void verifica_1thread() {
     verifica_linhas (void* (intptr_t) 0);
     verifica_colunas (void* (intptr_t) 0);
     
+=======
+
+
+int subgrid_valido(int linha,int col){
+    int visao[TAM_SUDOKU] ={0}; // Array para marcar os numeros vistos
+    //Iterar sobre o grid 3x3
+    for(int i =0; i<3;i++){
+        for(int j = 0;j<3;j++){
+            
+            int num = sudoku[linha + i][col + j];
+            if(num < 1 || num > 9 || visao[num-1]){
+                return 0;
+            }
+
+            visao[num-1] = 1;
+        }
+    }
+   
+    return 1;
+}
+
+//aqui tem que passar o index da thread tambem
+
+void *verifica_3x3(void*param){
+    //Pega o tempo do sistema em segundos para calcular ao final
+    struct timespec inicio, fim;
+    clock_gettime(CLOCK_MONOTONIC, &inicio);
+
+    parametros *data = (parametros *) param;
+    int linha = data->linha;
+    int coluna = data ->coluna;
+    int thread_id = atomic_fetch_add(&thread_index,1);
+    //Verifica o subgrid
+    int valido = subgrid_valido(linha,coluna);
+    // Imprime o resultado
+    resultados[thread_id] = valido;
+    
+    //Mostra na tela quanto tempo foi necessário para rodar a subgrid 3x3
+    clock_gettime(CLOCK_MONOTONIC, &fim);
+    printf("O tempo necessário para verificar a thread do subgrid que começa em %d %d foi de: %.10f segundos\n",
+           linha, coluna, tempo_decorrido(inicio, fim));
+
+    free(param);
+    pthread_exit(NULL);
+}
+
+double tempo_decorrido(struct timespec inicio, struct timespec fim) {
+    return (fim.tv_sec - inicio.tv_sec) + (fim.tv_nsec - inicio.tv_nsec) / 1e9;
+>>>>>>> main
 }
