@@ -1,9 +1,22 @@
 #ifndef SUDOKU_H
 #define SUDOKU_H
+#include <stdlib.h>
+#include <pthread.h>
+#define NUM_THREADS 11
+#define TAM_SUDOKU 9
+
+extern int resultados[11];
+extern pthread_t threads[11];
+extern int sudoku[TAM_SUDOKU][TAM_SUDOKU];
 
 typedef struct {
-    int row;
-    int column;
-} parameters;
+    int linha;
+    int coluna;
+} parametros;
+
+void* verifica_linhas(void* parametros);
+void* verifica_colunas(void* parametros);
+void* verifica_3x3(void* parametros);
+int verificar_segmento_valido(int segmento[TAM_SUDOKU]);
 
 #endif 

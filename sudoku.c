@@ -4,82 +4,37 @@
 #include <time.h>
 #include "sudoku.h"
 
-#define NUM_THREADS 11
-#define TAM_SUDOKU 9
-
-int sudoku[TAM_SUDOKU][TAM_SUDOKU];
-
-
-
-
-
-int ler_sudoku(const char *nome_arquivo, int matriz[TAM_SUDOKU][TAM_SUDOKU]) {
-    /*Para esta função é passado o nome do arquivo do jogo sudoku + extensão, que são obtidos pelo argumento na segunda posição argv
-     e também uma matriz alocada TAM_SUDOKUxTAM_SUDOKU
-    */
-    FILE *fp = fopen(nome_arquivo, "r");
-    if (!fp) {
-        perror("Erro ao abrir o arquivo");
-        return 0;  // Falha
-    }
-    // Lê os valores do arquivo preenchendo a matriz linha por linha
+// Recebe um array de inteiros (seja uma linha, coluna, ou subgrade 3x3)
+int verificar_segmento_valido(int segmento[TAM_SUDOKU]) {
+    int numeros[TAM_SUDOKU + 1] = {0}; // Cria um array de tamanho 10 para colocar cada número em seu índice (ex: numeros[1] = 1), o último índice não é usado
     for (int i = 0; i < TAM_SUDOKU; i++) {
-        for (int j = 0; j < TAM_SUDOKU; j++) {
-            // Lê um inteiro do arquivo; se falhar, exibe erro e retorna falha
-            if (fscanf(fp, "%d", &matriz[i][j]) != 1) 
-            {
-                fprintf(stderr, "Erro ao ler valor da matriz.\n");
-                fclose(fp);
-                return 0;
-            }
+        int num = segmento[i]; 
+        //Verifica se o sudoku tem dígitos de 0 a 9 ou se o número já apareceu
+        if (num < 1 || num > 9 || numeros[num]) {
+            printf("O número %d já existe ou é inválido\n", num);
+            return 0;
         }
+        numeros[num] = 1; // Salva no array numeros que o numero ja foi encontrado
     }
-    // Fecha o arquivo após a leitura
-    fclose(fp);
-    return 1;  // Sucesso
-}
-void *verificarLinha(void *arg) {
-    int linha = *(int *)arg;
-    int numeros[10] = {0};
-
-    for (int j = 0; j < TAM_SUDOKU; j++) {
-        int num = sudoku[linha][j];
-        if (num < 1 || num > 9) {
-            printf("Linha %d possui número inválido: %d\n", linha + 1, num);
-            pthread_exit((void *)0);
-        }
-        if (numeros[num]) {
-            printf("Linha %d possui número repetido: %d\n", linha + 1, num);
-            pthread_exit((void *)0);
-        }
-        numeros[num] = 1;
-    }
-
-    pthread_exit((void *)1);
+    return 1; 
 }
 
-
-
-int main(int argc, char *argv[]) {
-
-    if (argc < 2) {
-        printf("Uso: %s <nome_do_arquivo>\n", argv[0]);
-        return 1;
-    }
-
-    if (!ler_sudoku(argv[1], sudoku)) {
-        return 1; // Erro já tratado dentro da função
-    }
-
-    printf("Matriz Sudoku lida:\n");
+// Recebe NULL como parâmetros devido a thread que verifica as linhas não precisar receber o struct parâmetros
+void *verifica_linhas(void *param) {
     for (int i = 0; i < TAM_SUDOKU; i++) {
+        int linha[TAM_SUDOKU];
         for (int j = 0; j < TAM_SUDOKU; j++) {
-            printf("%d ", sudoku[i][j]);
+            linha[j] = sudoku[i][j];
         }
-        printf("\n");
+        if (verificar_segmento_valido(linha) == 0) {
+            printf("Erro na linha %d\n", i);
+            resultados[0] = 0;
+            pthread_exit(NULL);
+        }
     }
+    resultados[0] = 1;
+    pthread_exit(NULL);
+}
 
-
-
-    return 0;
+void *verifica_colunas(void *parametros) {
 }

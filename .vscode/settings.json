@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "time.h": "c",
-        "pthread.h": "c"
+        "pthread.h": "c",
+        "sudoku.h": "c"
     }
 }
