@@ -38,6 +38,7 @@ int ler_sudoku(const char *nome_arquivo, int matriz[TAM_SUDOKU][TAM_SUDOKU]) {
 
 void cria_threads () {
     pthread_create(&threads[0], NULL, verifica_linhas, NULL);
+    pthread_create(&threads[1],NULL,verifica_colunas,NULL);
 }
 
 void aguarda_threads() {
@@ -69,6 +70,7 @@ int main(int argc, char *argv[]) {
     cria_threads();
     aguarda_threads();
     printf("%d resultado\n", resultados[0]);
+    printf("%d resultado\n", resultados[1]);
 
     return 0;
 }

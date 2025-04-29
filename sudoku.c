@@ -36,5 +36,27 @@ void *verifica_linhas(void *param) {
     pthread_exit(NULL);
 }
 
-void *verifica_colunas(void *parametros) {
+
+void *verifica_colunas(void *param) {
+    /*
+        Essa função funciona de forma semelhante a verificar_linhas, nela
+        1º Fixamos a coluna;
+        2º Iteramos sobre as linhas, então vou pegar as posições [0][0],[0][1]....
+        3º Com isto, temos um array das colunas, só precisamos inverter as posições i e j da matriz (i como coluna e j como linha)
+        4º Com isto, podemos passar para verificar o segmento
+    */
+    for( int i = 0;i < TAM_SUDOKU;i++){
+        int coluna[TAM_SUDOKU];
+        for(int j = 0;j < TAM_SUDOKU;j++){
+            coluna[j] = sudoku[j][i];
+        }
+        if(verificar_segmento_valido(coluna) == 0){
+            printf("Erro na coluna %d\n",i);
+            resultados[1] = 0;
+            pthread_exit(NULL);
+        }
+    }
+
+    resultados[1] = 1;
+    pthread_exit(NULL);
 }
