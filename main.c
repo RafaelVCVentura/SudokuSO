@@ -75,6 +75,11 @@ void aguarda_threads() {
 
 
 int main(int argc, char *argv[]) {
+    asdasd;
+    //Seleciona o modo baseado no que é passado pelo argv
+    int escolha = atoi(argv[2]);
+
+    //Começa a contagem do programa
     struct timespec inicio_total, fim_total;
     clock_gettime(CLOCK_MONOTONIC, &inicio_total);
 
@@ -94,14 +99,22 @@ int main(int argc, char *argv[]) {
         }
         printf("\n");
     }
-
-    cria_threads();
-    aguarda_threads();
-    for(int i = 0; i <NUM_THREADS;i++){
-        printf("%d resultado [%d]\n", resultados[i],i);
+    
+    switch(escolha) {
+        case 1:
+            verifica_1thread();
+            break;
+        case 2:
+            cria_threads();
+            aguarda_threads();
+            break;
+        default:
+            printf("Digite um valor valido!\n");
+            break;
     }
+
     
     clock_gettime(CLOCK_MONOTONIC, &fim_total);
-    printf("O tempo de execução total foi de: %.6f segundos\n", tempo_decorrido(inicio_total, fim_total));
+    printf("O tempo de execução total foi de: %.10f segundos\n", tempo_decorrido(inicio_total, fim_total));
     return 0;
 }

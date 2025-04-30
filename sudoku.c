@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <time.h>
+#include <stdint.h>
 #include "sudoku.h"
 
 // Recebe um array de inteiros (seja uma linha, coluna, ou subgrade 3x3)
@@ -21,6 +22,7 @@ int verificar_segmento_valido(int segmento[TAM_SUDOKU]) {
 
 // Recebe NULL como parâmetros caso utilize threads devido a thread que verifica as linhas não precisar receber o struct parâmetros
 void *verifica_linhas(void *param) {
+
     int flag = (intptr_t) param;
     for (int i = 0; i < TAM_SUDOKU; i++) {
         int linha[TAM_SUDOKU]; //Cria um array com o tamanho do Sudoku
@@ -43,8 +45,9 @@ void *verifica_linhas(void *param) {
     pthread_exit(NULL);
 }
 
-
+//Recebe uma flag que indica qual é o modo do programa
 void *verifica_colunas(void *param) {
+    int flag = (intptr_t) param;
     /*
         Essa função funciona de forma semelhante a verificar_linhas, nela
         1º Fixamos a coluna;
@@ -60,29 +63,26 @@ void *verifica_colunas(void *param) {
         if(verificar_segmento_valido(coluna) == 0){
             printf("Erro na coluna %d\n",i);
             resultados[1] = 0;
+            if (flag == 0) {
+                return NULL;
+            }
             pthread_exit(NULL);
         }
     }
 
     resultados[1] = 1;
+    if (flag == 0) {
+        return NULL;
+    }
     pthread_exit(NULL);
 }
-
-<<<<<<< HEAD
-//Faz a validação com uma única thread
-void verifica_1thread() {
-    verifica_linhas (void* (intptr_t) 0);
-    verifica_colunas (void* (intptr_t) 0);
-    
-=======
-
 
 int subgrid_valido(int linha,int col){
     int visao[TAM_SUDOKU] ={0}; // Array para marcar os numeros vistos
     //Iterar sobre o grid 3x3
     for(int i =0; i<3;i++){
         for(int j = 0;j<3;j++){
-            
+
             int num = sudoku[linha + i][col + j];
             if(num < 1 || num > 9 || visao[num-1]){
                 return 0;
@@ -94,8 +94,6 @@ int subgrid_valido(int linha,int col){
    
     return 1;
 }
-
-//aqui tem que passar o index da thread tambem
 
 void *verifica_3x3(void*param){
     //Pega o tempo do sistema em segundos para calcular ao final
@@ -120,7 +118,35 @@ void *verifica_3x3(void*param){
     pthread_exit(NULL);
 }
 
+
+void verifica_subgrids_1thread(void) {
+    int index = 2;
+    for(int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            parametros *data = malloc(sizeof(parametros));
+            data->linha = i * 3;
+            data->coluna = j * 3;
+
+            if (subgrid_valido(data->linha, data->coluna) == 0) {
+                resultados[index] = 0;
+            }
+            else {
+                resultados[index] = 1;
+            }
+            index++;
+        }
+    }
+
+}
+
+//Faz a validação com uma única thread
+void verifica_1thread() {
+    verifica_linhas ((void*) (intptr_t) 0);
+    verifica_colunas ((void*) (intptr_t) 0);
+    verifica_subgrids_1thread();
+}
+
+
 double tempo_decorrido(struct timespec inicio, struct timespec fim) {
     return (fim.tv_sec - inicio.tv_sec) + (fim.tv_nsec - inicio.tv_nsec) / 1e9;
->>>>>>> main
 }

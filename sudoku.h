@@ -19,10 +19,8 @@ typedef struct {
 void* verifica_linhas(void* parametros);
 void* verifica_colunas(void* parametros);
 void* verifica_3x3(void* parametros);
+void verifica_subgrids_1thread(void);
 int verificar_segmento_valido(int segmento[TAM_SUDOKU]);
-<<<<<<< HEAD
 void verifica_1thread();
-=======
 double tempo_decorrido(struct timespec inicio, struct timespec fim);
->>>>>>> main
 #endif 
