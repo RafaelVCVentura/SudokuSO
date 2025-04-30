@@ -97,11 +97,18 @@ int main(int argc, char *argv[]) {
 
     cria_threads();
     aguarda_threads();
-    for(int i = 0; i <NUM_THREADS;i++){
-        printf("%d resultado [%d]\n", resultados[i],i);
-    }
     
     clock_gettime(CLOCK_MONOTONIC, &fim_total);
-    printf("O tempo de execução total foi de: %.6f segundos\n", tempo_decorrido(inicio_total, fim_total));
+    printf("O tempo de execução total foi de: %.6f segundos\n\n", tempo_decorrido(inicio_total, fim_total));
+
+    for(int i = 0; i < NUM_THREADS;i++){
+        if (resultados[i] == 0) {
+         printf("O Sudoku é inválido.\n");
+         return 1;
+        }
+     }
+
+     printf("O sudoku é válido!\n");
+
     return 0;
 }
