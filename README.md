@@ -46,3 +46,4 @@ Após a compilação, execute o programa passando o arquivo de teste como argume
 
 - Compilador `gcc`
 - Ambiente Linux ou compatível com POSIX
+- Download do comando `make` no Linux
