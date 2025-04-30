@@ -20,6 +20,7 @@ Além disso foi adicionado um retorno de tempo de execução, tanto de cada thre
 ---
 
 ## ⚙️ Como Compilar
+Com o terminal dentro do diretório do seu projeto, siga os passos:
 
 Compile o projeto usando o comando:
 
