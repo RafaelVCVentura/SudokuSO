@@ -111,15 +111,18 @@ int subgrid_valido(int linha, int col) {
 }
 
 void *verifica_3x3(void *param) {
-    struct timespec inicio, fim;
-    clock_gettime(CLOCK_MONOTONIC, &inicio);
-
     parametros *data = (parametros *) param;
     int linha = data->linha;
     int coluna = data->coluna;
-    int thread_id = atomic_fetch_add(&thread_index, 1);
     
-    resultados[thread_id] = subgrid_valido(linha, coluna);
+    struct timespec inicio, fim;
+    clock_gettime(CLOCK_MONOTONIC, &inicio);
+    
+    int valido = subgrid_valido(linha, coluna);
+    
+    // Calcula o ID do subgrid (2 a 10)
+    int subgrid_id = (linha/3)*3 + (coluna/3) + 2;
+    resultados[subgrid_id] = valido;
     
     clock_gettime(CLOCK_MONOTONIC, &fim);
     //printf("O tempo necessário para verificar a thread do subgrid que começa em %d %d foi de: %.10f segundos\n",
