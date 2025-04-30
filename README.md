@@ -54,7 +54,7 @@ Após a compilação, execute o programa passando o arquivo de teste como argume
 
 ## 🧰 Requisitos
 
-- Compilador `gcc`
+- Compilador `gcc` em uma versão compatível com `C11`
 - Ambiente Linux ou compatível com POSIX
 - Download do comando `make` no Linux
 
