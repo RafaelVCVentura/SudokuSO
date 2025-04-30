@@ -38,7 +38,7 @@ int ler_sudoku(const char *nome_arquivo, int matriz[TAM_SUDOKU][TAM_SUDOKU]) {
 }
 
 void cria_threads () {
-    //Pega o início do tempo em segundos do processo ou do sistema, cria a thread calculando as linhas e mostra na tela o tempo decorrido necessário
+    // Captura o tempo atual (em segundos e nanossegundos) desde um ponto fixo, usando um relógio que não é afetado por ajustes manuais no sistema
     struct timespec inicio, fim;
     clock_gettime(CLOCK_MONOTONIC, &inicio);
 
@@ -47,11 +47,11 @@ void cria_threads () {
     clock_gettime(CLOCK_MONOTONIC, &fim);
     printf("\nO tempo necessário para executar essa thread de linhas foi de %.10f segundos\n", tempo_decorrido(inicio, fim));
 
-    //Faz o mesmo que fez com as linhas, agora com as colunas
+    //Faz o mesmo que fez com as linhas em relação ao tempo, agora com as colunas
     clock_gettime(CLOCK_MONOTONIC, &inicio);
 
     pthread_create(&threads[1], NULL, verifica_colunas, NULL);
-    
+
     clock_gettime(CLOCK_MONOTONIC, &fim);
     printf("O tempo necessário para executar essa thread de colunas foi de %.10f segundos\n\n", tempo_decorrido(inicio, fim));
 
@@ -117,6 +117,7 @@ int main(int argc, char *argv[]) {
         printf("\n");
     }
     printf("\n");
+    
     //Varre o array de resultados e verifica se o sudoku é inválido
     for(int i = 0; i < NUM_THREADS;i++){
         if (resultados[i] == 0) {
