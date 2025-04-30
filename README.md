@@ -27,6 +27,12 @@ Compile o projeto usando o comando:
 make
 ```
 
+Caso o make não esteja do agrado do usuário, é possível compilar o projeto usando o comando:
+
+```bash
+gcc main.c sudoku.c -o programa
+```
+
 Isso irá gerar o executável chamado `programa`.
 
 ---
