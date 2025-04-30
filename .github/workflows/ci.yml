@@ -22,7 +22,7 @@ jobs:
         run: sudo apt-get install build-essential
 
       - name: Compile the program
-        run: make
+        run: make -B
 
       - name: Give execute permission to the program
         run: chmod +x ./programa  # Adiciona permissão de execução ao programa
