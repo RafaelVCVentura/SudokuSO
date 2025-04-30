@@ -75,7 +75,7 @@ void aguarda_threads() {
 
 
 int main(int argc, char *argv[]) {
-    asdasd;
+    printf(asdasd);
     //Seleciona o modo baseado no que é passado pelo argv
     int escolha = atoi(argv[2]);
 

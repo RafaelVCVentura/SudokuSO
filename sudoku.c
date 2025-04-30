@@ -22,7 +22,7 @@ int verificar_segmento_valido(int segmento[TAM_SUDOKU]) {
 
 // Recebe NULL como parâmetros caso utilize threads devido a thread que verifica as linhas não precisar receber o struct parâmetros
 void *verifica_linhas(void *param) {
-    printf(asdasd);
+
     int flag = (intptr_t) param;
     for (int i = 0; i < TAM_SUDOKU; i++) {
         int linha[TAM_SUDOKU]; //Cria um array com o tamanho do Sudoku
@@ -118,7 +118,7 @@ void *verifica_3x3(void*param){
     pthread_exit(NULL);
 }
 
-
+//Funciona similar a criação de threads dos outros modos para verificar subgrids
 void verifica_subgrids_1thread(void) {
     int index = 2;
     for(int i = 0; i < 3; i++) {
