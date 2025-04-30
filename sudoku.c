@@ -20,10 +20,12 @@ int verificar_segmento_valido(int segmento[TAM_SUDOKU]) {
     return 1; 
 }
 
-// Recebe NULL como parâmetros caso utilize threads devido a thread que verifica as linhas não precisar receber o struct parâmetros
+//Recebe uma flag como parâmetro. Caso o valor seja 0, ele está rodando com apenas uma thread, 
+//caso seja 1 está rodando com 11 threads.
 void *verifica_linhas(void *param) {
 
     int flag = (intptr_t) param;
+
     for (int i = 0; i < TAM_SUDOKU; i++) {
         int linha[TAM_SUDOKU]; //Cria um array com o tamanho do Sudoku
         for (int j = 0; j < TAM_SUDOKU; j++) {
@@ -39,13 +41,16 @@ void *verifica_linhas(void *param) {
         }
     }
     resultados[0] = 1; //Retorna 1 como sucesso e sai da thread
+
     if(flag == 0) {
         return NULL;
     }
+
     pthread_exit(NULL);
 }
 
-//Recebe uma flag que indica qual é o modo do programa
+//Recebe uma flag como parâmetro. Caso o valor seja 0, ele está rodando com apenas uma thread, 
+//caso seja 1 está rodando com 11 threads.
 void *verifica_colunas(void *param) {
     int flag = (intptr_t) param;
     /*
@@ -146,7 +151,7 @@ void verifica_1thread() {
     verifica_subgrids_1thread();
 }
 
-
+//Calcula a diferença do tempo em segundos + o tempo em nanossegundos e faz a divisão por 1e9 para transformar em segundos
 double tempo_decorrido(struct timespec inicio, struct timespec fim) {
     return (fim.tv_sec - inicio.tv_sec) + (fim.tv_nsec - inicio.tv_nsec) / 1e9;
 }

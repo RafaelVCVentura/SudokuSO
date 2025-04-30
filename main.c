@@ -41,13 +41,17 @@ void cria_threads () {
     //Pega o início do tempo em segundos do processo ou do sistema, cria a thread calculando as linhas e mostra na tela o tempo decorrido necessário
     struct timespec inicio, fim;
     clock_gettime(CLOCK_MONOTONIC, &inicio);
+
     pthread_create(&threads[0], NULL, verifica_linhas, NULL);
+
     clock_gettime(CLOCK_MONOTONIC, &fim);
     printf("\nO tempo necessário para executar essa thread de linhas foi de %.10f segundos\n", tempo_decorrido(inicio, fim));
 
     //Faz o mesmo que fez com as linhas, agora com as colunas
     clock_gettime(CLOCK_MONOTONIC, &inicio);
+
     pthread_create(&threads[1], NULL, verifica_colunas, NULL);
+    
     clock_gettime(CLOCK_MONOTONIC, &fim);
     printf("O tempo necessário para executar essa thread de colunas foi de %.10f segundos\n\n", tempo_decorrido(inicio, fim));
 
@@ -91,33 +95,6 @@ int main(int argc, char *argv[]) {
         return 1; // Erro já tratado dentro da função
     }
 
-    printf("Matriz Sudoku lida:\n");
-    for (int i = 0; i < TAM_SUDOKU; i++) {
-        for (int j = 0; j < TAM_SUDOKU; j++) {
-            printf("%d ", sudoku[i][j]);
-        }
-        printf("\n");
-    }
-<<<<<<< HEAD
-
-    cria_threads();
-    aguarda_threads();
-    
-    clock_gettime(CLOCK_MONOTONIC, &fim_total);
-    printf("O tempo de execução total foi de: %.6f segundos\n\n", tempo_decorrido(inicio_total, fim_total));
-
-    //Varre o array de resultados e verifica se o sudoku é inválido
-    for(int i = 0; i < NUM_THREADS;i++){
-        if (resultados[i] == 0) {
-            printf("O Sudoku é inválido.\n");
-            return 1;
-        }
-     }
-
-    printf("O sudoku é válido!\n");
-
-=======
-    
     switch(escolha) {
         case 1:
             verifica_1thread();
@@ -128,12 +105,28 @@ int main(int argc, char *argv[]) {
             break;
         default:
             printf("Digite um valor valido!\n");
+            return 1;
             break;
     }
 
-    
+    printf("\nMatriz Sudoku lida:\n");
+    for (int i = 0; i < TAM_SUDOKU; i++) {
+        for (int j = 0; j < TAM_SUDOKU; j++) {
+            printf("%d ", sudoku[i][j]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+    //Varre o array de resultados e verifica se o sudoku é inválido
+    for(int i = 0; i < NUM_THREADS;i++){
+        if (resultados[i] == 0) {
+            printf("O Sudoku é inválido.\n");
+            return 1;
+        }
+    }
+    printf("O sudoku é válido!\n");
+
     clock_gettime(CLOCK_MONOTONIC, &fim_total);
     printf("O tempo de execução total foi de: %.10f segundos\n", tempo_decorrido(inicio_total, fim_total));
->>>>>>> 1thread
     return 0;
 }
