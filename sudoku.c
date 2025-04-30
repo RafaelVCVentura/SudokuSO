@@ -81,8 +81,6 @@ int subgrid_valido(int linha,int col){
     return 1;
 }
 
-//aqui tem que passar o index da thread tambem
-
 void *verifica_3x3(void*param){
     //Pega o tempo do sistema em segundos para calcular ao final
     struct timespec inicio, fim;
