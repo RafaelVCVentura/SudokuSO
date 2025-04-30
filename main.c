@@ -75,7 +75,6 @@ void aguarda_threads() {
 
 
 int main(int argc, char *argv[]) {
-    printf(1/0)
     struct timespec inicio_total, fim_total;
     clock_gettime(CLOCK_MONOTONIC, &inicio_total);
 
