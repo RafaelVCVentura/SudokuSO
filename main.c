@@ -75,6 +75,10 @@ void aguarda_threads() {
 
 
 int main(int argc, char *argv[]) {
+    //Seleciona o modo baseado no que é passado pelo argv
+    int escolha = atoi(argv[2]);
+
+    //Começa a contagem do programa
     struct timespec inicio_total, fim_total;
     clock_gettime(CLOCK_MONOTONIC, &inicio_total);
 
@@ -94,6 +98,7 @@ int main(int argc, char *argv[]) {
         }
         printf("\n");
     }
+<<<<<<< HEAD
 
     cria_threads();
     aguarda_threads();
@@ -111,5 +116,24 @@ int main(int argc, char *argv[]) {
 
     printf("O sudoku é válido!\n");
 
+=======
+    
+    switch(escolha) {
+        case 1:
+            verifica_1thread();
+            break;
+        case 2:
+            cria_threads();
+            aguarda_threads();
+            break;
+        default:
+            printf("Digite um valor valido!\n");
+            break;
+    }
+
+    
+    clock_gettime(CLOCK_MONOTONIC, &fim_total);
+    printf("O tempo de execução total foi de: %.10f segundos\n", tempo_decorrido(inicio_total, fim_total));
+>>>>>>> 1thread
     return 0;
 }

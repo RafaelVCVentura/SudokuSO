@@ -1,6 +1,6 @@
 # Compilador e flags
 CC = gcc
-CFLAGS = -Wall -g
+CFLAGS = -Wall -Werror -g
 
 # Arquivos fonte
 SRC = main.c sudoku.c
