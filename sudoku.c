@@ -7,7 +7,7 @@
 
 // Recebe um array de inteiros (seja uma linha, coluna, ou subgrade 3x3)
 int verificar_segmento_valido(int segmento[TAM_SUDOKU]) {
-    int numeros[TAM_SUDOKU + 1] = {0}; // Cria um array de tamanho 10 para colocar cada número em seu índice (ex: numeros[1] = 1), o último índice não é usado
+    int numeros[10] = {0}; // Cria um array de tamanho 10 para colocar cada número em seu índice (ex: numeros[1] = 1), o último índice não é usado
     for (int i = 0; i < TAM_SUDOKU; i++) {
         int num = segmento[i]; 
         //Verifica se o sudoku tem dígitos de 0 a 9 ou se o número já apareceu
@@ -83,17 +83,19 @@ void *verifica_colunas(void *param) {
 }
 
 int subgrid_valido(int linha,int col){
-    int visao[TAM_SUDOKU] ={0}; // Array para marcar os numeros vistos
+    int visao[10] ={0}; // Array para marcar os numeros vistos
     //Iterar sobre o grid 3x3
     for(int i =0; i<3;i++){
         for(int j = 0;j<3;j++){
 
-            int num = sudoku[linha + i][col + j];
-            if(num < 1 || num > 9 || visao[num-1]){
+            //exemplo -> linha 3 e i =2, coluna = 1 e j = 0, teriamos a posicao [5][1]
+            int num = sudoku[linha + i][col + j]; 
+            //Verifica se o número é válido ou se já foi lido no array
+            if(num < 1 || num > 9 || visao[num]){
                 return 0;
             }
-
-            visao[num-1] = 1;
+            //Marca o numero como lido
+            visao[num] = 1; 
         }
     }
    
@@ -118,7 +120,7 @@ void *verifica_3x3(void*param){
     clock_gettime(CLOCK_MONOTONIC, &fim);
     printf("O tempo necessário para verificar a thread do subgrid que começa em %d %d foi de: %.10f segundos\n",
            linha, coluna, tempo_decorrido(inicio, fim));
-
+    //libera a memória alocada para o TAD
     free(param);
     pthread_exit(NULL);
 }

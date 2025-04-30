@@ -57,3 +57,16 @@ Após a compilação, execute o programa passando o arquivo de teste como argume
 - Compilador `gcc`
 - Ambiente Linux ou compatível com POSIX
 - Download do comando `make` no Linux
+
+---
+
+## 👥 Autores e Contribuições
+
+- **Matheus Yago Lima de Freitas**  
+  Responsável pela criação e leitura do arquivo de entrada, além da lógica principal de validação do Sudoku. Implementou funções para verificação de linhas, subgrids 3x3 e colunas no modo com 11 threads. Também estruturou a criação das threads, desenvolveu o `Makefile` e configurou o workflow do GitHub Actions.
+
+- **Rafael Victor Costa Ventura**  
+  Atuou na organização do código, criando a estrutura do TAD (structs e funções) e a implementação da `main`. Desenvolveu o modo de execução com uma thread, além das funções de verificação de colunas e subgrids. Implementou a medição do tempo de execução e o uso de variáveis atômicas para tratar problemas de concorrência.
+
+- **Candido Queiroga**  
+  Responsável pela criação e implementação do modo com 27 threads. Também analisou os dados de tempo de execução coletados, organizando-os em uma planilha para comparação entre os diferentes modos de execução.
