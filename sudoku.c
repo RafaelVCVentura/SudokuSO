@@ -21,13 +21,13 @@ int verificar_segmento_valido(int segmento[TAM_SUDOKU]) {
 void *verifica_linha_individual(void *param) {
     parametros *data = (parametros *)param;
     int linha_num = data->linha;
+    int thread_id = data->thread_id;
     int linha[TAM_SUDOKU];
     
     for (int j = 0; j < TAM_SUDOKU; j++) {
         linha[j] = sudoku[linha_num][j];
     }
     
-    int thread_id = atomic_fetch_add(&thread_index, 1);
     resultados[thread_id] = verificar_segmento_valido(linha);
     
     free(param);
@@ -37,13 +37,13 @@ void *verifica_linha_individual(void *param) {
 void *verifica_coluna_individual(void *param) {
     parametros *data = (parametros *)param;
     int coluna_num = data->coluna;
+    int thread_id = data->thread_id;
     int coluna[TAM_SUDOKU];
     
     for (int i = 0; i < TAM_SUDOKU; i++) {
         coluna[i] = sudoku[i][coluna_num];
     }
     
-    int thread_id = atomic_fetch_add(&thread_index, 1);
     resultados[thread_id] = verificar_segmento_valido(coluna);
     
     free(param);
@@ -67,7 +67,7 @@ void *verifica_linhas(void *param) {
         }
     }
     resultados[0] = 1;
-    if(flag == 0) {
+    if (flag == 0) {
         return NULL;
     }
     pthread_exit(NULL);
@@ -75,12 +75,12 @@ void *verifica_linhas(void *param) {
 
 void *verifica_colunas(void *param) {
     int flag = (intptr_t) param;
-    for(int i = 0; i < TAM_SUDOKU; i++) {
+    for (int i = 0; i < TAM_SUDOKU; i++) {
         int coluna[TAM_SUDOKU];
-        for(int j = 0; j < TAM_SUDOKU; j++) {
+        for (int j = 0; j < TAM_SUDOKU; j++) {
             coluna[j] = sudoku[j][i];
         }
-        if(verificar_segmento_valido(coluna) == 0) {
+        if (verificar_segmento_valido(coluna) == 0) {
             printf("Erro na coluna %d\n", i);
             resultados[1] = 0;
             if (flag == 0) {
@@ -98,10 +98,10 @@ void *verifica_colunas(void *param) {
 
 int subgrid_valido(int linha, int col) {
     int visao[TAM_SUDOKU] = {0};
-    for(int i = 0; i < 3; i++) {
-        for(int j = 0; j < 3; j++) {
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
             int num = sudoku[linha + i][col + j];
-            if(num < 1 || num > 9 || visao[num-1]) {
+            if (num < 1 || num > 9 || visao[num-1]) {
                 return 0;
             }
             visao[num-1] = 1;
@@ -111,22 +111,22 @@ int subgrid_valido(int linha, int col) {
 }
 
 void *verifica_3x3(void *param) {
-    parametros *data = (parametros *) param;
+    parametros *data = (parametros *)param;
     int linha = data->linha;
     int coluna = data->coluna;
+    int thread_id = data->thread_id;
+    
+    printf("Iniciando verificação do subgrid (%d,%d)\n", linha, coluna);
     
     struct timespec inicio, fim;
     clock_gettime(CLOCK_MONOTONIC, &inicio);
     
     int valido = subgrid_valido(linha, coluna);
     
-    // Calcula o ID do subgrid (2 a 10)
-    int subgrid_id = (linha/3)*3 + (coluna/3) + 2;
-    resultados[subgrid_id] = valido;
+    resultados[thread_id] = valido;
     
     clock_gettime(CLOCK_MONOTONIC, &fim);
-    //printf("O tempo necessário para verificar a thread do subgrid que começa em %d %d foi de: %.10f segundos\n",
-           //linha, coluna, tempo_decorrido(inicio, fim));
+    printf("Verificação do subgrid (%d,%d) concluída: %d\n", linha, coluna, valido);
 
     free(param);
     pthread_exit(NULL);
@@ -134,9 +134,13 @@ void *verifica_3x3(void *param) {
 
 void verifica_subgrids_1thread(void) {
     int index = 2;
-    for(int i = 0; i < 3; i++) {
-        for(int j = 0; j < 3; j++) {
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
             parametros *data = malloc(sizeof(parametros));
+            if (!data) {
+                perror("Erro ao alocar memória para parâmetros");
+                exit(EXIT_FAILURE);
+            }
             data->linha = i * 3;
             data->coluna = j * 3;
             resultados[index++] = subgrid_valido(data->linha, data->coluna);

@@ -14,6 +14,7 @@ extern int sudoku[TAM_SUDOKU][TAM_SUDOKU];
 typedef struct {
     int linha;
     int coluna;
+    int thread_id; // Índice para o array resultados
 } parametros;
 
 void* verifica_linhas(void* parametros);
