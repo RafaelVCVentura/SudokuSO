@@ -52,6 +52,9 @@ Após a compilação, execute o programa passando o arquivo de teste como argume
 
 ---
 
+## 📚 Planilha
+https://docs.google.com/spreadsheets/d/1V2LT24aXL6VpNf5aa6G5U7vmZ9EdaKgSjE_nBTlmVoY/edit?usp=sharing
+
 ## 🧰 Requisitos
 
 - Compilador `gcc` em uma versão compatível com `C11`
