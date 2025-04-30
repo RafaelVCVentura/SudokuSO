@@ -101,14 +101,15 @@ int main(int argc, char *argv[]) {
     clock_gettime(CLOCK_MONOTONIC, &fim_total);
     printf("O tempo de execução total foi de: %.6f segundos\n\n", tempo_decorrido(inicio_total, fim_total));
 
+    //Varre o array de resultados e verifica se o sudoku é inválido
     for(int i = 0; i < NUM_THREADS;i++){
         if (resultados[i] == 0) {
-         printf("O Sudoku é inválido.\n");
-         return 1;
+            printf("O Sudoku é inválido.\n");
+            return 1;
         }
      }
 
-     printf("O sudoku é válido!\n");
+    printf("O sudoku é válido!\n");
 
     return 0;
 }
